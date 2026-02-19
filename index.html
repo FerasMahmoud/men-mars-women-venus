@@ -26,6 +26,85 @@
       --border: rgba(255,255,255,0.07);
     }
 
+    /* ─── Light Mode Variables ─── */
+    body.light {
+      --bg-dark: #f0f0fa;
+      --bg-card: #ffffff;
+      --bg-card2: #f5f5ff;
+      --text-main: #1a1a2e;
+      --text-muted: #6060a0;
+      --border: rgba(0,0,0,0.09);
+      --gold: #d68910;
+      --gold-light: #b7770d;
+    }
+
+    body.light::before {
+      background-image:
+        radial-gradient(2px 2px at 10% 15%, rgba(192,57,43,.15) 0%, transparent 100%),
+        radial-gradient(2px 2px at 30% 70%, rgba(142,68,173,.12) 0%, transparent 100%),
+        radial-gradient(2px 2px at 55% 25%, rgba(192,57,43,.1) 0%, transparent 100%),
+        radial-gradient(2px 2px at 75% 80%, rgba(142,68,173,.08) 0%, transparent 100%),
+        radial-gradient(2px 2px at 90% 45%, rgba(192,57,43,.12) 0%, transparent 100%),
+        radial-gradient(3px 3px at 20% 90%, rgba(142,68,173,.1) 0%, transparent 100%),
+        radial-gradient(2px 2px at 65% 55%, rgba(192,57,43,.08) 0%, transparent 100%),
+        radial-gradient(2px 2px at 42% 40%, rgba(142,68,173,.1) 0%, transparent 100%);
+    }
+
+    body.light .hero {
+      background: linear-gradient(180deg, rgba(192,57,43,.08) 0%, rgba(142,68,173,.08) 50%, transparent 100%);
+    }
+
+    body.light .nav-wrap {
+      background: rgba(240,240,250,.95);
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+
+    body.light .stats-bar {
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    body.light .chapter-card:hover {
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+    }
+
+    body.light .quote-box {
+      background: linear-gradient(135deg, rgba(214,137,16,.12), rgba(214,137,16,.04));
+      border-color: rgba(214,137,16,.4);
+    }
+
+    body.light .key-lesson {
+      background: linear-gradient(135deg, rgba(26,188,156,.1), rgba(26,188,156,.03));
+    }
+
+    body.light .search-input {
+      background: #ffffff;
+      border-color: rgba(0,0,0,.12);
+      color: var(--text-main);
+    }
+
+    body.light .search-input:focus {
+      border-color: rgba(214,137,16,.5);
+      box-shadow: 0 0 0 3px rgba(214,137,16,.1);
+    }
+
+    body.light .point-item {
+      background: #f0f0fa;
+    }
+
+    body.light .compare-col {
+      background: #f0f0fa;
+    }
+
+    body.light .tip-card {
+      background: #ffffff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+
+    body.light footer {
+      background: #ffffff;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -467,15 +546,52 @@
       transition: width .2s;
     }
 
+    /* ─── Theme Toggle ─── */
+    .theme-toggle {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 999;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.25);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(20deg);
+      box-shadow: 0 6px 28px rgba(0,0,0,.35);
+    }
+    body.light .theme-toggle {
+      box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      border-color: rgba(0,0,0,.1);
+    }
+
+    /* ─── Smooth transitions for theme switch ─── */
+    body, .hero, .nav-wrap, .stats-bar, .chapter-card, .info-card,
+    .compare-col, .point-item, .tip-card, .search-input, footer,
+    .tab-btn, .quote-box, .key-lesson {
+      transition: background .3s, background-color .3s, color .3s, border-color .3s, box-shadow .3s;
+    }
+
     @media(max-width: 600px) {
       .hero { padding: 50px 16px 40px; }
       .planet { width: 70px; height: 70px; font-size: 32px; }
       .chapter-header { padding: 16px; }
       .chapter-body { padding: 0 16px 20px; }
+      .theme-toggle { bottom: 16px; left: 16px; width: 46px; height: 46px; font-size: 1.2rem; }
     }
   </style>
 </head>
-<body x-data="app()" @scroll.window="updateProgress()">
+<body x-data="app()" :class="lightMode ? 'light' : ''" @scroll.window="updateProgress()">
 
   <!-- Progress -->
   <div class="progress-bar" :style="`width:${progress}%`"></div>
@@ -658,6 +774,11 @@
 
   </main>
 
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" @click="toggleTheme()" :title="lightMode ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'">
+    <span x-text="lightMode ? '🌙' : '☀️'"></span>
+  </button>
+
   <footer>
     <p>ملخص كتاب "الرجال من المريخ والنساء من الزهرة" — John Gray (1992)</p>
     <p style="margin-top:6px">تم بناء هذه الصفحة بـ <a href="https://alpinejs.dev" target="_blank">Alpine.js</a> ❤️</p>
@@ -670,6 +791,12 @@
         openChapters: [1],
         search: '',
         progress: 0,
+        lightMode: localStorage.getItem('theme') === 'light',
+
+        toggleTheme() {
+          this.lightMode = !this.lightMode;
+          localStorage.setItem('theme', this.lightMode ? 'light' : 'dark');
+        },
 
         updateProgress() {
           const el = document.documentElement;
