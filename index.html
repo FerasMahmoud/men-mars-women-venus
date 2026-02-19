@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الرجال من المريخ والنساء من الزهرة</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --mars: #c0392b;
+      --mars-light: #e74c3c;
+      --mars-glow: #ff6b6b;
+      --venus: #8e44ad;
+      --venus-light: #9b59b6;
+      --venus-glow: #c39bd3;
+      --gold: #f39c12;
+      --gold-light: #f1c40f;
+      --bg-dark: #0a0a1a;
+      --bg-card: #12122a;
+      --bg-card2: #1a1a35;
+      --text-main: #e8e8f8;
+      --text-muted: #9090b0;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Stars Background ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 45%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 42% 40%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 5% 60%, rgba(255,255,255,.3) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 70px 20px 60px;
+      background: linear-gradient(180deg, rgba(192,57,43,.15) 0%, rgba(142,68,173,.15) 50%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .planets-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .planet {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      animation: float 4s ease-in-out infinite;
+      box-shadow: 0 0 40px var(--glow-color);
+    }
+    .planet.mars  { background: radial-gradient(circle at 35% 35%, #e74c3c, #7b241c); --glow-color: rgba(231,76,60,.5); }
+    .planet.venus { background: radial-gradient(circle at 35% 35%, #9b59b6, #4a235a); --glow-color: rgba(155,89,182,.5); animation-delay: -2s; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+    .planet-connector {
+      font-size: 28px;
+      color: var(--gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--mars-glow), var(--gold-light), var(--venus-glow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .hero .sub {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .author-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(243,156,18,.2), rgba(243,156,18,.05));
+      border: 1px solid rgba(243,156,18,.4);
+      color: var(--gold-light);
+      padding: 6px 20px;
+      border-radius: 30px;
+      font-size: .9rem;
+      margin-top: 8px;
+    }
+
+    /* ─── Stats Bar ─── */
+    .stats-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding: 24px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat { text-align: center; }
+    .stat .num { font-size: 1.8rem; font-weight: 900; }
+    .stat .lbl { font-size: .8rem; color: var(--text-muted); }
+    .stat.red .num  { color: var(--mars-light); }
+    .stat.pur .num  { color: var(--venus-light); }
+    .stat.gold .num { color: var(--gold); }
+
+    /* ─── Navigation Tabs ─── */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,26,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 16px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 14px 18px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      font-family: 'Cairo', sans-serif;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: all .25s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-main); }
+    .tab-btn.active {
+      color: var(--gold-light);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ─── Main Layout ─── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 16px 80px;
+    }
+
+    /* ─── Overview Section ─── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      border-radius: 0 0 0 80px;
+      opacity: .3;
+    }
+    .info-card.mars-card  { border-top: 3px solid var(--mars-light); }
+    .info-card.mars-card::before { background: var(--mars); }
+    .info-card.venus-card { border-top: 3px solid var(--venus-light); }
+    .info-card.venus-card::before { background: var(--venus); }
+    .info-card.gold-card  { border-top: 3px solid var(--gold); }
+    .info-card.gold-card::before { background: var(--gold); }
+
+    .info-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-card p, .info-card li {
+      font-size: .9rem;
+      color: rgba(232,232,248,.8);
+      line-height: 1.7;
+    }
+    .info-card ul { padding-right: 18px; }
+    .info-card ul li { margin-bottom: 6px; }
+
+    /* ─── Chapter Cards ─── */
+    .chapters-list { display: flex; flex-direction: column; gap: 24px; }
+
+    .chapter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .chapter-card:hover {
+      border-color: rgba(255,255,255,.15);
+      box-shadow: 0 8px 40px rgba(0,0,0,.3);
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ch-number {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .ch-number.mars  { background: linear-gradient(135deg, var(--mars), #7b241c); color: #fff; }
+    .ch-number.venus { background: linear-gradient(135deg, var(--venus), #4a235a); color: #fff; }
+    .ch-number.gold  { background: linear-gradient(135deg, var(--gold), #d68910); color: #fff; }
+    .ch-number.mix   { background: linear-gradient(135deg, var(--mars), var(--venus)); color: #fff; }
+
+    .ch-meta { flex: 1; }
+    .ch-meta h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; line-height: 1.4; }
+    .ch-meta .ch-tagline { font-size: .82rem; color: var(--text-muted); }
+
+    .ch-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .tag {
+      font-size: .73rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .tag.mars  { background: rgba(192,57,43,.25); color: var(--mars-glow); border: 1px solid rgba(192,57,43,.4); }
+    .tag.venus { background: rgba(142,68,173,.25); color: var(--venus-glow); border: 1px solid rgba(142,68,173,.4); }
+    .tag.gold  { background: rgba(243,156,18,.2); color: var(--gold-light); border: 1px solid rgba(243,156,18,.4); }
+    .tag.teal  { background: rgba(26,188,156,.2); color: #1abc9c; border: 1px solid rgba(26,188,156,.4); }
+
+    .ch-toggle { font-size: 1.2rem; color: var(--text-muted); transition: transform .3s; }
+    .ch-toggle.open { transform: rotate(180deg); }
+
+    /* ─── Chapter Body ─── */
+    .chapter-body {
+      border-top: 1px solid var(--border);
+      padding: 0 24px 24px;
+    }
+
+    .section-block {
+      margin-top: 22px;
+    }
+
+    .section-block h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-block h4 span.icon { font-size: 1.1rem; }
+
+    .section-block p {
+      font-size: .9rem;
+      color: rgba(232,232,248,.85);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .points-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .point-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: var(--bg-card2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+    .point-icon { flex-shrink: 0; font-size: 1rem; }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media(max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+
+    .compare-col {
+      background: var(--bg-card2);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .compare-col.mars-col  { border-right: 3px solid var(--mars-light); }
+    .compare-col.venus-col { border-right: 3px solid var(--venus-light); }
+    .compare-col h5 {
+      font-size: .85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .compare-col.mars-col h5  { color: var(--mars-light); }
+    .compare-col.venus-col h5 { color: var(--venus-light); }
+    .compare-col ul { padding-right: 16px; }
+    .compare-col li { font-size: .83rem; color: rgba(232,232,248,.8); line-height: 1.6; margin-bottom: 4px; }
+
+    .quote-box {
+      background: linear-gradient(135deg, rgba(243,156,18,.1), rgba(243,156,18,.03));
+      border: 1px solid rgba(243,156,18,.3);
+      border-right: 4px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 14px;
+      font-size: .9rem;
+      color: rgba(232,232,248,.9);
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .quote-box::before { content: '"'; font-size: 2rem; color: var(--gold); line-height: .5; }
+
+    .key-lesson {
+      background: linear-gradient(135deg, rgba(26,188,156,.12), rgba(26,188,156,.03));
+      border: 1px solid rgba(26,188,156,.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-top: 14px;
+    }
+    .key-lesson h5 {
+      color: #1abc9c;
+      font-size: .88rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .key-lesson p { font-size: .87rem; color: rgba(232,232,248,.85); line-height: 1.7; }
+
+    /* ─── Tips Section ─── */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .tip-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .tip-card .tip-icon { font-size: 2rem; margin-bottom: 10px; }
+    .tip-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: 8px; color: var(--gold-light); }
+    .tip-card p  { font-size: .85rem; color: rgba(232,232,248,.8); line-height: 1.7; }
+
+    /* Transitions */
+    [x-cloak] { display: none !important; }
+
+    /* ─── Footer ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: .85rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+      margin: 24px 0;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 13px 50px 13px 20px;
+      color: var(--text-main);
+      font-family: 'Cairo', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .3s;
+    }
+    .search-input:focus { border-color: rgba(243,156,18,.5); }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--mars-light), var(--gold), var(--venus-light));
+      z-index: 9999;
+      transition: width .2s;
+    }
+
+    @media(max-width: 600px) {
+      .hero { padding: 50px 16px 40px; }
+      .planet { width: 70px; height: 70px; font-size: 32px; }
+      .chapter-header { padding: 16px; }
+      .chapter-body { padding: 0 16px 20px; }
+    }
+  </style>
+</head>
+<body x-data="app()" @scroll.window="updateProgress()">
+
+  <!-- Progress -->
+  <div class="progress-bar" :style="`width:${progress}%`"></div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="planets-row">
+      <div class="planet mars">♂</div>
+      <div class="planet-connector">❤️</div>
+      <div class="planet venus">♀</div>
+    </div>
+    <h1>الرجال من المريخ<br/>والنساء من الزهرة</h1>
+    <p class="sub">ملخص شامل ومفصّل لجميع فصول الكتاب</p>
+    <div class="author-badge">✍️ تأليف: جون غراي — John Gray</div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat red">
+      <div class="num">13</div>
+      <div class="lbl">فصلاً</div>
+    </div>
+    <div class="stat pur">
+      <div class="num">فكرة رئيسية+30</div>
+      <div class="lbl">مفهوم</div>
+    </div>
+    <div class="stat gold">
+      <div class="num">1992</div>
+      <div class="lbl">سنة النشر</div>
+    </div>
+  </div>
+
+  <!-- Sticky Tabs -->
+  <div class="nav-wrap">
+    <div class="tabs">
+      <button class="tab-btn" :class="activeTab==='overview'?'active':''" @click="activeTab='overview'">📖 نظرة عامة</button>
+      <button class="tab-btn" :class="activeTab==='chapters'?'active':''" @click="activeTab='chapters'">📚 الفصول</button>
+      <button class="tab-btn" :class="activeTab==='tips'?'active':''" @click="activeTab='tips'">💡 نصائح عملية</button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ═══════════ OVERVIEW ═══════════ -->
+    <div x-show="activeTab==='overview'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+
+      <div class="overview-grid" style="margin-top:8px">
+        <div class="info-card gold-card">
+          <h3>📘 عن الكتاب</h3>
+          <p>صدر عام 1992 للمعالج العلاقاتي جون غراي، وأصبح من أكثر كتب العلاقات مبيعاً في التاريخ بأكثر من <strong>15 مليون نسخة</strong> حول العالم. يرسم الكتاب صورة مجازية رائعة: كأن الرجال والنساء قادمون من كوكبين مختلفين، ومن هنا تنشأ معظم خلافاتهم.</p>
+        </div>
+        <div class="info-card mars-card">
+          <h3>♂️ الرجل من المريخ</h3>
+          <ul>
+            <li>يرى نفسه مستقلاً وصانع قرار</li>
+            <li>يعبّر عن حبه بالأفعال لا الكلام</li>
+            <li>يحتاج إلى "كهفه" ليفكر وحده</li>
+            <li>يُقدّر المكانة والنتائج</li>
+            <li>يتراجع حين يكون في ضغط</li>
+            <li>يكره التوجيه غير المطلوب</li>
+          </ul>
+        </div>
+        <div class="info-card venus-card">
+          <h3>♀️ المرأة من الزهرة</h3>
+          <ul>
+            <li>تبني هويتها على العلاقات والمشاعر</li>
+            <li>تعبّر عن الحب بالتحدث والمشاركة</li>
+            <li>تحتاج إلى تأكيد الحب بالكلمات</li>
+            <li>تُقدّر التواصل والاهتمام</li>
+            <li>مشاعرها تتراجع وتعود كالموجة</li>
+            <li>تحتاج إلى الإصغاء لا الحلول</li>
+          </ul>
+        </div>
+        <div class="info-card gold-card">
+          <h3>💡 الفكرة المحورية</h3>
+          <p>الاختلافات بين الجنسين ليست عيوباً بل طبيعة مختلفة. حين يتقبّل كل طرف هذا الاختلاف ويفهمه، تتحوّل العلاقة من صراع إلى تكامل. السر كله في <strong>التفاهم، لا التغيير</strong>.</p>
+        </div>
+      </div>
+
+      <div class="key-lesson">
+        <h5>🎯 الرسالة الأساسية للكتاب</h5>
+        <p>الرجال والنساء يختلفون في طريقة التفكير، التواصل، الاستجابة للضغط، والتعبير عن المشاعر. هذه الاختلافات مصدر غنى لا شقاء — بشرط أن يتعلم كل طرف "لغة" الطرف الآخر ويحترم احتياجاته الأساسية المختلفة.</p>
+      </div>
+
+    </div>
+
+    <!-- ═══════════ CHAPTERS ═══════════ -->
+    <div x-show="activeTab==='chapters'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" placeholder="ابحث في الفصول..." x-model="search" />
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <div class="chapters-list">
+        <template x-for="(ch, idx) in filteredChapters()" :key="idx">
+          <div class="chapter-card">
+            <div class="chapter-header" @click="toggleChapter(ch.id)">
+              <div class="ch-number" :class="ch.color" x-text="ch.num"></div>
+              <div class="ch-meta">
+                <h2 x-text="ch.title"></h2>
+                <div class="ch-tagline" x-text="ch.tagline"></div>
+                <div class="ch-tags">
+                  <template x-for="t in ch.tags">
+                    <span class="tag" :class="t.color" x-text="t.label"></span>
+                  </template>
+                </div>
+              </div>
+              <span class="ch-toggle" :class="openChapters.includes(ch.id)?'open':''">▼</span>
+            </div>
+            <div class="chapter-body" x-show="openChapters.includes(ch.id)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+              <template x-for="section in ch.sections" :key="section.title">
+                <div class="section-block">
+                  <h4><span class="icon" x-text="section.icon"></span> <span x-text="section.title"></span></h4>
+                  <template x-if="section.text">
+                    <p x-text="section.text"></p>
+                  </template>
+                  <template x-if="section.text2">
+                    <p x-text="section.text2"></p>
+                  </template>
+                  <template x-if="section.points">
+                    <div class="points-list">
+                      <template x-for="pt in section.points">
+                        <div class="point-item">
+                          <span class="point-icon" x-text="pt.icon"></span>
+                          <span x-text="pt.text"></span>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                  <template x-if="section.compare">
+                    <div class="compare-grid">
+                      <div class="compare-col mars-col">
+                        <h5>♂️ الرجل — المريخ</h5>
+                        <ul>
+                          <template x-for="i in section.compare.mars">
+                            <li x-text="i"></li>
+                          </template>
+                        </ul>
+                      </div>
+                      <div class="compare-col venus-col">
+                        <h5>♀️ المرأة — الزهرة</h5>
+                        <ul>
+                          <template x-for="i in section.compare.venus">
+                            <li x-text="i"></li>
+                          </template>
+                        </ul>
+                      </div>
+                    </div>
+                  </template>
+                  <template x-if="section.quote">
+                    <div class="quote-box" x-text="section.quote"></div>
+                  </template>
+                  <template x-if="section.lesson">
+                    <div class="key-lesson">
+                      <h5>✅ الدرس الرئيسي</h5>
+                      <p x-text="section.lesson"></p>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ═══════════ TIPS ═══════════ -->
+    <div x-show="activeTab==='tips'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+      <div class="tips-grid" style="margin-top:8px">
+        <template x-for="tip in tips" :key="tip.title">
+          <div class="tip-card">
+            <div class="tip-icon" x-text="tip.icon"></div>
+            <h4 x-text="tip.title"></h4>
+            <p x-text="tip.body"></p>
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>ملخص كتاب "الرجال من المريخ والنساء من الزهرة" — John Gray (1992)</p>
+    <p style="margin-top:6px">تم بناء هذه الصفحة بـ <a href="https://alpinejs.dev" target="_blank">Alpine.js</a> ❤️</p>
+  </footer>
+
+  <script>
+    function app() {
+      return {
+        activeTab: 'chapters',
+        openChapters: [1],
+        search: '',
+        progress: 0,
+
+        updateProgress() {
+          const el = document.documentElement;
+          const scrolled = el.scrollTop || document.body.scrollTop;
+          const total = el.scrollHeight - el.clientHeight;
+          this.progress = total ? (scrolled / total) * 100 : 0;
+        },
+
+        toggleChapter(id) {
+          if (this.openChapters.includes(id)) {
+            this.openChapters = this.openChapters.filter(x => x !== id);
+          } else {
+            this.openChapters.push(id);
+          }
+        },
+
+        filteredChapters() {
+          if (!this.search.trim()) return this.chapters;
+          const q = this.search.toLowerCase();
+          return this.chapters.filter(c =>
+            c.title.includes(q) || c.tagline.includes(q) ||
+            c.tags.some(t => t.label.includes(q))
+          );
+        },
+
+        tips: [
+          { icon: '🎯', title: 'استمع بلا حل', body: 'عندما تشكو المرأة من مشكلة، فهي تريد أن تُسمع وتُفهم، وليس أن تُحل مشكلتها فوراً. قل: "أفهم شعورك" بدلاً من "إليك الحل".' },
+          { icon: '🏔️', title: 'احترم الكهف', body: 'عندما ينسحب الرجل إلى صمته أو "كهفه"، لا تطارديه. هذا وقت تشحين طاقته. أخبريه أنك موجودة حين يكون جاهزاً.' },
+          { icon: '💬', title: 'المرأة والتعبير المُبالَغ فيه', body: 'حين تقول المرأة "دائماً" أو "أبداً" وهي غاضبة، فهي تعبّر عن مشاعرها لا تسجّل وقائع. تعلّم الرجل ألا يردّ بالدفاع.' },
+          { icon: '⭐', title: 'نقاط الحب العشر', body: 'المرأة تحتاج إلى عشر نقاط من الحب يومياً (رسالة، حضن، سؤال، هدية صغيرة...). الرجل يعطي نقطة كبيرة (هدية غالية) ويعتقد أنه وفّى!' },
+          { icon: '🌊', title: 'موجة المشاعر', body: 'مشاعر المرأة كالموجة — ترتفع وتنخفض. في قاع الموجة هي بحاجة ماسة للدعم والاستماع. لا تحاول "إصلاحها" — فقط كُن موجوداً.' },
+          { icon: '🔄', title: 'الشد والجذب', body: 'الرجل يقترب ثم يبتعد كالمطاط، ثم يعود. هذا طبيعي ويعني أن العلاقة بخير. المرأة التي تفهم هذا لا تقلق وتحتفي بعودته.' },
+          { icon: '🗣️', title: 'قل ما تريد بوضوح', body: 'المرأة أحياناً تلمّح وتتوقع أن الرجل يفهم. الرجل لا يقرأ الأفكار! الطلب الواضح يُنتج نتائج أفضل بكثير من التلميح.' },
+          { icon: '🏆', title: 'قدّر جهوده', body: 'الرجل بحاجة إلى التقدير كما المرأة بحاجة إلى الحب. حين تشكرينه على أشياء صغيرة، فأنت تشحنين بطاريته وتحفزينه على المزيد.' },
+          { icon: '❤️', title: 'اللغات الخمس للحب', body: 'كل شخص يعبّر عن الحب ويستقبله بطريقة مختلفة. تعرّف على لغة حب شريكك ولا تكتفِ بلغتك الخاصة.' },
+          { icon: '🌱', title: 'النمو المستمر', body: 'الكتاب لا يقدّم حلولاً سحرية بل أدوات للفهم. العلاقة الناجحة تحتاج ممارسة يومية وصبر وإرادة حقيقية للتفاهم.' },
+          { icon: '⚖️', title: 'الخلاف الصحي', body: 'الخلاف ليس نهاية العلاقة. المهم هو أسلوب الخلاف: الهجوم الشخصي يدمر، أما التعبير عن المشاعر فيبني.' },
+          { icon: '🌙', title: 'لحظات الاتصال', body: 'أهم 20 دقيقة في اليوم هي حين يعود أحد الشريكين إلى البيت. اجعلها لحظة دافئة وإيجابية، وستتحسن علاقتكما بشكل ملحوظ.' },
+        ],
+
+        chapters: [
+          {
+            id: 1, num: '١', color: 'gold', title: 'الرجال من المريخ، النساء من الزهرة',
+            tagline: 'الفكرة الكبرى — كأننا من كوكبين مختلفين',
+            tags: [{ label: 'أساسي', color: 'gold' }, { label: 'فلسفة', color: 'teal' }],
+            sections: [
+              {
+                icon: '🪐', title: 'المجاز الكوني',
+                text: 'يبدأ جون غراي كتابه بمجاز عبقري: تخيّل أن الرجال والنساء قادمون من كوكبين مختلفين تماماً. الرجال من المريخ — كوكب القوة والاستقلالية والأهداف. والنساء من الزهرة — كوكب المشاعر والعلاقات والتواصل.',
+                text2: 'حين هبطوا على الأرض، نسوا أنهم مختلفون، وبدأت المشكلات. الخطأ الأكبر هو أن كل طرف يتوقع أن الآخر يفكر ويشعر ويتصرف بنفس الطريقة.'
+              },
+              {
+                icon: '📊', title: 'مقارنة القيم الأساسية',
+                compare: {
+                  mars: ['يُقدّر الكفاءة والاستقلالية', 'هدفه الرئيسي: حل المشكلات', 'يعرّف ذاته بالإنجاز', 'يتجنب طلب المساعدة', 'يحترم الاكتفاء الذاتي'],
+                  venus: ['تُقدّر الحب والتواصل', 'هدفها الرئيسي: مشاركة المشاعر', 'تعرّف ذاتها بالعلاقات', 'لا تتردد في طلب المساعدة', 'تقدّر التعاون المتبادل']
+                }
+              },
+              {
+                icon: '💡', title: 'لماذا هذا المجاز مفيد؟',
+                points: [
+                  { icon: '✅', text: 'يمنحنا إطاراً لفهم الاختلاف دون إصدار أحكام' },
+                  { icon: '✅', text: 'يُحوّل الإحباط إلى فضول وتفاهم' },
+                  { icon: '✅', text: 'يجعلنا نتوقع الاختلاف بدلاً من الاستغراب منه' },
+                  { icon: '✅', text: 'يفتح الباب للتعلم والتكيف' }
+                ],
+                lesson: 'حين تتذكر أن شريكك من "كوكب آخر"، يتحوّل إحباطك إلى فضول. الاختلاف ليس خطأ أحد — إنه طبيعة مختلفة تستحق الاحترام والفهم.'
+              }
+            ]
+          },
+          {
+            id: 2, num: '٢', color: 'mars', title: 'السيد إصلاح الأشياء ومجمّع المعلومات',
+            tagline: 'الرجل يريد أن يحل — المرأة تريد أن تُسمع',
+            tags: [{ label: 'تواصل', color: 'teal' }, { label: 'رجال', color: 'mars' }],
+            sections: [
+              {
+                icon: '🔧', title: 'عقلية "إصلاح الأشياء"',
+                text: 'الرجل مُبرمج بطبعه على حل المشكلات. حين تشاركه المرأة مشكلة ما، يسمع دماغه فوراً: "مشكلة تحتاج حلاً". فيبدأ في تقديم النصائح والحلول ظناً منه أن هذا هو ما تحتاجه.',
+                text2: 'لكن المرأة في أغلب الأحيان لا تريد حلاً! هي تريد أن تشاركه مشاعرها، أن يُصغي إليها، أن يقول لها "أفهم ما تشعرين به". حين يقدّم الحلول مباشرة، تشعر بأنه لم يسمعها.'
+              },
+              {
+                icon: '📰', title: 'المرأة وجريدة الأخبار',
+                text: 'الرجل حين يعود من العمل، يريد أن يقرأ الجريدة أو يشاهد التلفاز بهدوء. المرأة تريد أن تحكي عن يومها وتستمع إليه عن يومه.',
+                points: [
+                  { icon: '♂️', text: 'الرجل: الصمت بعد العمل وسيلة للتعافي واستعادة الطاقة' },
+                  { icon: '♀️', text: 'المرأة: الحديث بعد العمل وسيلة للتعافي ومعالجة المشاعر' },
+                  { icon: '⚠️', text: 'المشكلة: كل منهما يظن أن الآخر يتصرف بشكل خاطئ' }
+                ]
+              },
+              {
+                icon: '🗣️', title: 'كيف تطلبين المساعدة؟',
+                text: 'المرأة أحياناً تتوقع أن الرجل يفهم احتياجاتها بدون أن تقولها. الرجل لا يقرأ الأفكار — يحتاج إلى طلب واضح ومحدد.',
+                quote: 'حين تريدين أن يساعدك الرجل، قولي له بوضوح ما تريدينه. الرجل يفرح بمساعدتك حين يعرف بالضبط ما تحتاجينه.',
+                lesson: 'الرجل اعتِبره طبيباً في غرفة الطوارئ — يريد تشخيص المشكلة وحلها بأسرع وقت. المرأة تريد طبيباً يجلس معها ويُنصت. كلاهما صحيح في سياقه — المهم هو التوقيت والوعي.'
+              }
+            ]
+          },
+          {
+            id: 3, num: '٣', color: 'venus', title: 'الرجال يذهبون إلى كهوفهم والنساء يتحدثن',
+            tagline: 'فهم أسلوب التعامل مع الضغط والتوتر',
+            tags: [{ label: 'ضغط', color: 'gold' }, { label: 'سلوك', color: 'teal' }],
+            sections: [
+              {
+                icon: '🦁', title: 'الكهف الذكوري',
+                text: 'حين يواجه الرجل مشكلة أو ضغطاً، يميل إلى الانسحاب — جسدياً أو ذهنياً — إلى "كهفه". يصمت، يشغل التلفاز، يمارس رياضته، أو ينشغل بشيء ما. هذا ليس هرباً من المرأة — بل هو أسلوبه الطبيعي في معالجة الضغط.',
+                text2: 'المشكلة أن المرأة تفسّر هذا الانسحاب بأنه رسالة: "لا يريدني، أو غاضب مني، أو ثمة مشكلة في علاقتنا". فتحاول التواصل أكثر، مما يزيد الرجل انسحاباً.'
+              },
+              {
+                icon: '🌊', title: 'موجة المرأة',
+                text: 'المرأة في المقابل تتعامل مع الضغط بشكل مختلف تماماً: تريد أن تتحدث وتشارك مشاعرها. هذا ليس شكوى أو ضعفاً — بل هو آليتها الصحية في معالجة التوتر.',
+                compare: {
+                  mars: ['يصمت ويفكر بمفرده', 'يحل المشكلة ثم يعود', 'الكلام أثناء الضغط يزيد التوتر', 'يرى الصمت علامة قوة', 'يريد حلاً قبل المشاعر'],
+                  venus: ['تتحدث لتعالج مشاعرها', 'التحدث نفسه هو الحل', 'الصمت يزيد توترها', 'ترى الصمت علامة قطيعة', 'تريد مشاركة المشاعر أولاً']
+                }
+              },
+              {
+                icon: '💡', title: 'كيف تتعاملون مع الكهف؟',
+                points: [
+                  { icon: '♀️', text: 'لا تطاردي الرجل حين ينسحب — امنحيه الوقت الذي يحتاجه' },
+                  { icon: '♀️', text: 'اعرفي أن انسحابه لا علاقة له بحبه لكِ' },
+                  { icon: '♀️', text: 'حين يخرج من كهفه، استقبليه بدفء لا بعتاب' },
+                  { icon: '♂️', text: 'لا تترك المرأة تتخيّل أسوأ السيناريوهات — أخبرها: "أنا بحاجة لبعض الوقت، سأعود قريباً"' },
+                  { icon: '♂️', text: 'حدّد توقيتاً للعودة حتى تطمئن' }
+                ],
+                quote: 'الرجل كالمطاط — يبتعد ثم يرتد. كلما ابتعد أكثر، عاد بحماس أكثر. لكن إذا طاردتِه أثناء ابتعاده، فلن يرتد.',
+                lesson: 'الفهم هو كل شيء. حين تعرف المرأة أن الكهف أمر طبيعي، يتوقف الخوف. وحين يعرف الرجل أن المرأة تحتاج للكلام لا للحلول — يتوقف سوء الفهم.'
+              }
+            ]
+          },
+          {
+            id: 4, num: '٤', color: 'venus', title: 'كيف يتحفز الرجل ويتعلم المرأة التلقي',
+            tagline: 'الدرجة والتقدير والنقطة الواحدة',
+            tags: [{ label: 'تحفيز', color: 'gold' }, { label: 'تقدير', color: 'mars' }],
+            sections: [
+              {
+                icon: '⭐', title: 'نظام النقاط الخاطئ',
+                text: 'الرجل يعتقد خطأً أن الأشياء الكبيرة (السيارة الجديدة، الإجازة السنوية) تساوي نقاطاً كثيرة في ميزان الحب. لكن المرأة تعطي نقطة واحدة لكل فعل — صغيراً كان أم كبيراً!',
+                text2: 'ورود صغيرة من الطريق = نقطة واحدة. عطلة نهاية الأسبوع الفاخرة = نقطة واحدة. المرأة تحتاج إلى "نقاط متعددة" يومياً، وليس نقطة كبيرة واحدة كل فترة.'
+              },
+              {
+                icon: '🏆', title: 'ما يحفّز الرجل حقاً',
+                text: 'الرجل يتحفز حين يشعر أنه يُحدث فرقاً إيجابياً في حياة المرأة. التقدير والشكر يُضاعفان رغبته في تقديم المزيد.',
+                points: [
+                  { icon: '✅', text: '"شكراً لك، هذا جعل يومي أجمل" — هذه الجملة تحفّز الرجل أكثر من أي شيء' },
+                  { icon: '✅', text: 'الاعتراف بجهوده — حتى الصغيرة — يجعله يُعطي أكثر' },
+                  { icon: '❌', text: 'الانتقاد المستمر يُشعره بالإخفاق ويُقلل من جهوده' },
+                  { icon: '❌', text: 'التوقع دون تقدير يُحبطه ويجعله يتوقف عن المحاولة' }
+                ]
+              },
+              {
+                icon: '🎁', title: 'تعلّم المرأة التلقي',
+                text: 'المرأة أحياناً تجد صعوبة في قبول الهدايا أو المساعدة دون أن تشعر بأنها مدينة. هذا الكتاب يدعوها إلى أن تتعلم "التلقي بأريحية".',
+                quote: 'حين ترفضين هديته أو عرضه، فأنت بدون قصد تقولين له إن عطاءه ليس كافياً أو مقبولاً.',
+                lesson: 'الرجل يُعطي حين يشعر بالتقدير. المرأة تُعطي حين تشعر بالرعاية. العلاقة الناجحة هي حيث كل طرف يُعطي بلغة الآخر ويتلقى بامتنان.'
+              }
+            ]
+          },
+          {
+            id: 5, num: '٥', color: 'mix', title: 'ما تحتاجه المرأة أكثر وما يحتاجه الرجل أكثر',
+            tagline: 'الاحتياجات الأساسية المختلفة لكل جنس',
+            tags: [{ label: 'احتياجات', color: 'teal' }, { label: 'علاقات', color: 'gold' }],
+            sections: [
+              {
+                icon: '💜', title: 'الاحتياجات الأساسية للمرأة الست',
+                points: [
+                  { icon: '💕', text: 'العناية والاهتمام — أن يشعرها أنها مهمة ويسأل عنها' },
+                  { icon: '👂', text: 'الفهم والإصغاء — أن يستمع دون أن يحكم أو يصحّح' },
+                  { icon: '🛡️', text: 'الاحترام — أن يأخذ مشاعرها وآراءها بجدية' },
+                  { icon: '🤝', text: 'الإخلاص — أن يكون موجوداً في أوقات الشدة' },
+                  { icon: '🌟', text: 'التأكيد — أن يؤكد لها باستمرار قيمتها وأهميتها' },
+                  { icon: '🌸', text: 'الطمأنينة — أن تعرف أنه يحبها بغض النظر عن الظروف' }
+                ]
+              },
+              {
+                icon: '❤️', title: 'الاحتياجات الأساسية للرجل الست',
+                points: [
+                  { icon: '🏆', text: 'الثقة — أن تؤمن بقدراته وقراراته' },
+                  { icon: '👍', text: 'القبول — أن تقبله كما هو لا كما تريد أن يكون' },
+                  { icon: '🙏', text: 'التقدير — أن تُعبّر عن شكرها لجهوده' },
+                  { icon: '😊', text: 'الإعجاب — أن تُظهر إعجابها بصفاته وقيمه' },
+                  { icon: '👍', text: 'الموافقة — أن توافق على طريقة تفكيره دون نقد مستمر' },
+                  { icon: '🤗', text: 'التشجيع — أن تؤيد طموحاته وأحلامه' }
+                ]
+              },
+              {
+                icon: '⚖️', title: 'حين تُهمَل الاحتياجات',
+                compare: {
+                  mars: ['يتوقف عن إعطاء الاهتمام', 'يصبح أكثر انسحاباً وصمتاً', 'يبدأ بالاهتمام بأولويات أخرى', 'يشعر بعدم القدرة على الإرضاء'],
+                  venus: ['تصبح أكثر نقداً وشكوى', 'تُعاني من التوتر العاطفي', 'تشعر بالوحدة حتى وهو بجانبها', 'تعتقد أن العلاقة فاشلة']
+                },
+                lesson: 'الاحتياجات ليست طلبات مبالغ فيها — هي الوقود الذي تعمل به العلاقة. حين يتعلم كل طرف أن يُلبّي احتياج الآخر، تتحوّل العلاقة بأكملها.'
+              }
+            ]
+          },
+          {
+            id: 6, num: '٦', color: 'venus', title: 'المرأة كالموجة والرجل كالمطاط',
+            tagline: 'الأنماط العاطفية الطبيعية لكل جنس',
+            tags: [{ label: 'مشاعر', color: 'venus' }, { label: 'أنماط', color: 'teal' }],
+            sections: [
+              {
+                icon: '🌊', title: 'دورة موجة المرأة',
+                text: 'مشاعر المرأة تشبه الموجة تماماً — ترتفع إلى قمة بهجة وأمان، ثم تنزل إلى القاع حيث تحتاج إلى الدعم والاستماع. هذه الدورة طبيعية وصحية وليست مشكلة تحتاج "إصلاحاً".',
+                text2: 'الخطأ الشائع: الرجل حين يرى موجتها تنخفض يحاول "إصلاح" المشكلة أو يُدافع عن نفسه، مما يجعلها تبقى في القاع أطول.'
+              },
+              {
+                icon: '🎯', title: 'ماذا تحتاج في قاع الموجة؟',
+                points: [
+                  { icon: '👂', text: 'إصغاء حقيقي دون حلول أو نصائح' },
+                  { icon: '💬', text: 'تعاطف وعبارات مثل: "أفهم شعورك"' },
+                  { icon: '🤗', text: 'حضور جسدي — حضن، يد ممدودة' },
+                  { icon: '⏰', text: 'صبر حتى تمر الموجة — لا تتعجل' },
+                  { icon: '❌', text: 'لا دفاع عن النفس، لا إصلاح، لا نصائح غير مطلوبة' }
+                ]
+              },
+              {
+                icon: '🔄', title: 'الشد والجذب — دورة الرجل',
+                text: 'الرجل في العلاقة يتصرف كالمطاط — يقترب، ثم حين تصبح العلاقة حميمة جداً يشعر بالحاجة للمساحة فيبتعد. ثم يشتاق ويعود بقوة.',
+                compare: {
+                  mars: ['الابتعاد وسيلة لاستعادة الطاقة', 'الابتعاد لا يعني فقدان الحب', 'يعود حين يكون مستعداً', 'المطاردة تُطيل فترة الابتعاد'],
+                  venus: ['تفسّر الابتعاد برفض أو مشكلة', 'تخشى أنه فقد الاهتمام', 'المطاردة تبدو حلاً طبيعياً لها', 'الصبر يكافأ بعودة أقوى']
+                },
+                quote: 'كلما أعطيتِ الرجل المساحة التي يحتاجها، عاد إليكِ بحماس وحب أكبر.',
+                lesson: 'فهم هذه الدورات يُزيل ٩٠٪ من سوء الفهم في العلاقات. الدورة ليست مشكلة — إنها مجرد نمط طبيعي يحتاج إلى قبول لا مقاومة.'
+              }
+            ]
+          },
+          {
+            id: 7, num: '٧', color: 'gold', title: 'كيف تتجنب أكثر المشاحنات شيوعاً',
+            tagline: 'أسباب الخلافات المتكررة وكيفية تجنبها',
+            tags: [{ label: 'خلافات', color: 'mars' }, { label: 'حلول', color: 'teal' }],
+            sections: [
+              {
+                icon: '💣', title: 'المشاحنات الأكثر شيوعاً',
+                points: [
+                  { icon: '1️⃣', text: 'الرجل لا يُصغي كفاية — المرأة تشعر بعدم الاهتمام' },
+                  { icon: '2️⃣', text: 'المرأة تُقدّم النصائح غير المطلوبة — الرجل يشعر بعدم الثقة' },
+                  { icon: '3️⃣', text: 'الرجل يُعطي الحلول بدلاً من التعاطف' },
+                  { icon: '4️⃣', text: 'المرأة تُعمّم: "أنت دائماً..." أو "لا تفعل أبداً..."' },
+                  { icon: '5️⃣', text: 'الرجل يصمت بدلاً من إخبارها أنه يحتاج وقتاً' },
+                  { icon: '6️⃣', text: 'المرأة تتوقع قراءة الأفكار دون قول ما تريد بوضوح' }
+                ]
+              },
+              {
+                icon: '🔥', title: 'لماذا نقول أشياء نندم عليها؟',
+                text: 'الرجل حين يشعر بالهجوم ينسحب أو يهاجم دفاعاً عن نفسه. المرأة حين تشعر بعدم الاهتمام تُعبّر بمشاعر مُبالغ فيها.',
+                text2: 'النتيجة: الرجل يرد على المشاعر المُبالَغ فيها لا على الشكوى الحقيقية، والمرأة تستجيب لدفاعية الرجل لا لموضوع الخلاف الأصلي.'
+              },
+              {
+                icon: '🕊️', title: 'قواعد الخلاف الصحي',
+                points: [
+                  { icon: '✅', text: 'اختر الوقت المناسب — لا تناقش مسائل جدية وأنت غاضب أو متعب' },
+                  { icon: '✅', text: 'تكلّم عن مشاعرك لا عن أخطاء الشريك: "أشعر بـ..." لا "أنت دائماً..."' },
+                  { icon: '✅', text: 'ناقش موضوعاً واحداً في كل مرة' },
+                  { icon: '✅', text: 'أنصت لفهم لا لترد' },
+                  { icon: '❌', text: 'لا تستخدم كلمات: "دائماً"، "أبداً"، "الكل"، "لا أحد"' },
+                  { icon: '❌', text: 'لا تُهجّم على الشخصية — ناقش السلوك فقط' }
+                ],
+                lesson: 'الخلاف الصحي هو الذي يُقرّب لا يُبعّد. السر في الأسلوب: نفس المشكلة يمكن مناقشتها بطريقة تبني أو طريقة تهدم.'
+              }
+            ]
+          },
+          {
+            id: 8, num: '٨', color: 'mars', title: 'اكتشاف احتياجاتنا الأولية',
+            tagline: 'تحت الغضب دائماً ألم — وتحت الألم خوف',
+            tags: [{ label: 'عمق', color: 'venus' }, { label: 'مشاعر', color: 'teal' }],
+            sections: [
+              {
+                icon: '🧅', title: 'طبقات المشاعر',
+                text: 'يُشبّه غراي المشاعر بالبصلة — لها طبقات متعددة. الطبقة الخارجية هي ما نُعبّر عنه عادةً (الغضب، الانزعاج). لكن تحتها يكمن الألم، والخوف، والحزن.',
+                text2: 'في كثير من الخلافات، الرجل والمرأة يتجادلان على الطبقة الخارجية بينما الجرح الحقيقي أعمق منها. الوصول إلى الطبقات الأعمق يُحوّل الخلاف إلى تواصل.'
+              },
+              {
+                icon: '🎭', title: 'المشاعر الإيجابية والسلبية',
+                compare: {
+                  mars: ['غاضب ← تحته ألم الفشل', 'صامت ← تحته خوف من الرفض', 'دفاعي ← تحته الإحساس بعدم الكفاءة', 'منسحب ← تحته حاجة للمساحة'],
+                  venus: ['حزينة ← تحته خوف من الوحدة', 'قلقة ← تحته حاجة للأمان', 'مُبالِغة ← تحته ألم عدم الاهتمام', 'تتكلم كثيراً ← تحته حاجة للتواصل']
+                }
+              },
+              {
+                icon: '💬', title: 'كيف تصل إلى الطبقات الأعمق؟',
+                points: [
+                  { icon: '🔑', text: 'استخدم عبارات الإصغاء: "أخبرني أكثر عن ذلك"' },
+                  { icon: '🔑', text: 'تجنّب التبرير والدفاع في البداية' },
+                  { icon: '🔑', text: 'اسأل: "كيف جعلك هذا تشعر؟" لا "لماذا تشعر هكذا؟"' },
+                  { icon: '🔑', text: 'اعترف بالمشاعر قبل أن تُفسّرها أو تُصحّحها' }
+                ],
+                quote: 'حين تشعر المرأة أنها مسموعة ومفهومة، فإنها لا تحتاج إلى أن يتفق الرجل معها — تحتاج فقط إلى أن يُصغي.',
+                lesson: 'التواصل العميق لا يعني عدم الاختلاف — بل يعني أن تبقى متصلاً بالإنسان الذي أمامك حتى في خضم الاختلاف.'
+              }
+            ]
+          },
+          {
+            id: 9, num: '٩', color: 'gold', title: 'تجنب الحجج والمشاكل',
+            tagline: 'فن تجنب الجدال غير المثمر وحل الخلافات بهدوء',
+            tags: [{ label: 'حلول', color: 'teal' }, { label: 'تواصل', color: 'gold' }],
+            sections: [
+              {
+                icon: '🎯', title: 'متى يصبح النقاش حجة؟',
+                text: 'النقاش يتحوّل إلى حجة حين يبدأ أحد الطرفين يُهاجم شخصية الآخر بدلاً من السلوك. أو حين يُصبح الهدف الفوز لا الفهم.',
+                points: [
+                  { icon: '⚠️', text: 'الدفاعية: "أنت هي من بدأت..." — تُغلق قنوات التواصل' },
+                  { icon: '⚠️', text: 'الاحتقار: النظرات، نبرة الصوت، الاستهزاء — يُدمّر العلاقة' },
+                  { icon: '⚠️', text: 'الانسحاب الصامت: يترك الطرف الآخر يتخيّل الأسوأ' },
+                  { icon: '⚠️', text: 'التعميم: "أنت دائماً هكذا" — يُغلق باب الحل' }
+                ]
+              },
+              {
+                icon: '🛑', title: 'أدوات وقف التصعيد',
+                points: [
+                  { icon: '⏸️', text: '"أحتاج لبضع دقائق لأهدأ، ثم نُكمل الحديث" — اطلب استراحة مؤقتة' },
+                  { icon: '🤝', text: '"أنا لا أريد أن نتشاجر — أريد أن نحل هذا معاً"' },
+                  { icon: '🎯', text: 'ركّز على الموضوع: "ما الذي نحاول حله بالضبط؟"' },
+                  { icon: '💡', text: '"كيف يمكنني أن أجعل هذا الأمر أفضل لك؟" — جملة سحرية' }
+                ]
+              },
+              {
+                icon: '📝', title: 'رسائل الحب — بديل رائع للحجج',
+                text: 'حين تكون المشاعر متوترة ويصعب الحديث الهادئ، يقترح غراي كتابة "رسالة حب" — رسالة تُعبّر فيها عن الغضب، ثم الحزن، ثم الخوف، ثم الندم، ثم الحب.',
+                quote: 'الرسالة المكتوبة تُتيح لك أن تُعبّر عن كل مشاعرك دون أن يُقاطعك أحد، ودون أن تتصاعد ردود الفعل.',
+                lesson: 'الهدف من أي خلاف ليس الفوز — بل أن تُفهَم وأن يشعر الطرف الآخر بأنه مُفهَم. حين يتذكر كلا الطرفين هذا، تتحوّل الحجة إلى حوار.'
+              }
+            ]
+          },
+          {
+            id: 10, num: '١٠', color: 'gold', title: 'كيف تطلب ما تريد',
+            tagline: 'فن الطلب — لغة الرجل والمرأة في التعبير عن الاحتياجات',
+            tags: [{ label: 'طلبات', color: 'gold' }, { label: 'تواصل', color: 'teal' }],
+            sections: [
+              {
+                icon: '📢', title: 'لماذا لا يُلبّى الطلب؟',
+                text: 'كثيراً ما تُعبّر المرأة عن احتياجاتها بصيغة الشكوى أو التلميح، فلا تُلبّى. والرجل يُعبّر عن احتياجاته بالصمت ويتوقع أن المرأة تفهم.',
+                compare: {
+                  mars: ['يطلب بشكل مباشر أو يصمت', 'يُحدد ما يريد بدقة', 'لا يُحب الاستفاضة في الطلب', 'يتوقع الامتنال على استجابته'],
+                  venus: ['تُلمّح أو تطلب بطريقة غير مباشرة', 'تتوقع أن الحب يعني فهم دون طلب', 'تطلب بحماس أو لا تطلب أصلاً', 'تشعر بالذنب حين تطلب']
+                }
+              },
+              {
+                icon: '✨', title: 'قواعد الطلب الفعّال',
+                points: [
+                  { icon: '1️⃣', text: 'كوني محددة: "هل يمكنك مساعدتي في غسيل الأطباق الآن؟" أفضل من "لا أحد يساعدني هنا"' },
+                  { icon: '2️⃣', text: 'استخدمي "أشعر بـ..." لا "أنت تفعل..."' },
+                  { icon: '3️⃣', text: 'اختاري الوقت المناسب — لا حين يكون منهكاً أو مشغولاً' },
+                  { icon: '4️⃣', text: 'اقبلي الرفض أحياناً دون إشعاره بالذنب — هذا يمنحه حرية قول "نعم" في المرة التالية' },
+                  { icon: '5️⃣', text: 'اشكريه حتى على الاستجابة الجزئية' }
+                ]
+              },
+              {
+                icon: '💫', title: 'السحر في عبارة واحدة',
+                text: 'يقترح غراي على المرأة استخدام هذه العبارة السحرية حين تريد شيئاً من الرجل:',
+                quote: '"أعرف أنك مشغول، لكنني سأُقدّر كثيراً لو استطعت... هل هذا ممكن؟" هذه الجملة تحترم مساحته وتُعبّر عن احتياجك بوضوح.',
+                lesson: 'الطلب الواضح والمحترم لا يُضعف المرأة — بل يمنحها قوة الحصول على ما تريد فعلاً. الغموض يُبقي الجميع في دوامة سوء الفهم.'
+              }
+            ]
+          },
+          {
+            id: 11, num: '١١', color: 'mars', title: 'تجنب الرسائل الخاطئة',
+            tagline: 'عبارات وتصرفات تُحمَل دائماً على محمل خاطئ',
+            tags: [{ label: 'أخطاء', color: 'mars' }, { label: 'تواصل', color: 'teal' }],
+            sections: [
+              {
+                icon: '⚠️', title: 'أخطاء المرأة الشائعة مع الرجل',
+                points: [
+                  { icon: '❌', text: 'تقديم النصائح غير المطلوبة — يُشعره بعدم الكفاءة' },
+                  { icon: '❌', text: 'تصحيح طريقة قيادته أو طريقة إنجازه للمهام' },
+                  { icon: '❌', text: 'السؤال "هل أنت بخير؟" باستمرار حين ينسحب — يزيد من انسحابه' },
+                  { icon: '❌', text: 'الشكوى من مشكلة ثم رفض حله — يجعله يشعر بعدم الجدوى' },
+                  { icon: '❌', text: 'التوقع دون الطلب الصريح — ينتهي بخيبة الأمل' }
+                ]
+              },
+              {
+                icon: '⚠️', title: 'أخطاء الرجل الشائعة مع المرأة',
+                points: [
+                  { icon: '❌', text: 'عدم الإصغاء وتقديم الحل فوراً دون التعاطف' },
+                  { icon: '❌', text: 'التقليل من مشاعرها: "هذا ليس مشكلة كبيرة"' },
+                  { icon: '❌', text: 'الانسحاب دون إخبارها بأنه يحتاج وقتاً — تتخيل الأسوأ' },
+                  { icon: '❌', text: 'نسيان المناسبات الصغيرة التي تهمها' },
+                  { icon: '❌', text: 'الاعتقاد أن هدية كبيرة تعوّض غياب الاهتمام اليومي' }
+                ]
+              },
+              {
+                icon: '🔄', title: 'إعادة تأطير الرسائل',
+                compare: {
+                  mars: ['"لقد حللت المشكلة" ← تفسرها: "لا يهتم بمشاعري"', '"أحتاج وقتاً" ← تفسرها: "يريد الابتعاد عني"', 'يُصلح الشيء ← تفسرها: "يعتقد أنني غير كفؤة"'],
+                  venus: ['"أنت دائماً..." ← يفسرها: "هجوم شخصي"', '"هل يمكنك..." ← يفسرها: "لا تثق بي"', 'تتحدث عن مشاعرها ← يفسرها: "تريد مني أن أفعل شيئاً"']
+                },
+                lesson: 'معظم الإساءات في العلاقات لا تكون مقصودة — بل هي نتيجة تأويلات خاطئة. فهم كيف يُفسّر الطرف الآخر كلماتك يُقلل سوء الفهم بشكل درامي.'
+              }
+            ]
+          },
+          {
+            id: 12, num: '١٢', color: 'venus', title: 'لغات الحب والتواصل الروحي',
+            tagline: 'كيف يُعبّر كل جنس عن الحب ويُدرك تعبير الآخر',
+            tags: [{ label: 'حب', color: 'venus' }, { label: 'لغة', color: 'gold' }],
+            sections: [
+              {
+                icon: '❤️', title: 'الرجل يُعبّر عن حبه بالأفعال',
+                text: 'حين يُصلح الرجل شيئاً في البيت، أو يعمل ساعات إضافية ليوفّر الراحة لأسرته، أو يقود سيارتها للصيانة — هو يقول بطريقته: "أنا أحبك". لكن المرأة لا ترى هذه الأفعال كتعبير عن الحب — بل تريد الكلمات.',
+                text2: 'الرجل بدوره لا يفهم لماذا تحتاج المرأة أن يقول "أحبك" باستمرار — أليست الأفعال تثبت الحب؟ كلاهما محق — لكنهما يتحدثان لغتين مختلفتين.'
+              },
+              {
+                icon: '💬', title: 'المرأة تُعبّر عن حبها بالكلمات والمشاركة',
+                text: 'المرأة تُريح قلبها بالكلام، وتشعر بالحب حين يُشاركها الرجل مشاعره وأفكاره. حديثها ليس شكوى — بل هو شكل من أشكال الحميمية والتواصل.',
+                points: [
+                  { icon: '💗', text: '"أنا أُقدّرك" — من أهم العبارات التي تحتاجها المرأة' },
+                  { icon: '💗', text: '"كيف كان يومك؟" والاستماع الحقيقي — من أعلى لغات الحب لها' },
+                  { icon: '💗', text: 'تذكّر التفاصيل الصغيرة — دليل على الاهتمام الحقيقي' },
+                  { icon: '💗', text: 'الحضور الذهني لا الجسدي فقط — هو ما تبحث عنه' }
+                ]
+              },
+              {
+                icon: '🌟', title: 'تعلم لغة شريكك',
+                quote: 'الحب الحقيقي ليس فقط أن تُعبّر عنه بطريقتك — بل أن تُعبّر عنه بالطريقة التي يستطيع شريكك أن يستقبلها.',
+                points: [
+                  { icon: '📖', text: 'الرجل: تعلّم أن تُعبّر بالكلمات — حتى جملة واحدة في اليوم تُحدث فرقاً' },
+                  { icon: '📖', text: 'المرأة: تعلّمي رؤية الأفعال الصغيرة كرسائل حب من الرجل' },
+                  { icon: '📖', text: 'كلاهما: اسأل شريكك "ما الذي يجعلك تشعر بالحب؟" واستمع جيداً' }
+                ],
+                lesson: 'العلاقة الرائعة لا تبنيها الصدفة — بل تبنيها اللحظات الصغيرة اليومية: كلمة طيبة، لمسة حنان، اهتمام حقيقي.'
+              }
+            ]
+          },
+          {
+            id: 13, num: '١٣', color: 'gold', title: 'كيف تحتفظ بالسحر والشعلة',
+            tagline: 'الحفاظ على الحب وإعادة إشعاله على مر السنين',
+            tags: [{ label: 'استمرارية', color: 'gold' }, { label: 'عملي', color: 'teal' }],
+            sections: [
+              {
+                icon: '🌹', title: 'لماذا يخبو الحب؟',
+                text: 'في بداية العلاقة، الجميع في أفضل حالاته. الرجل أكثر انتباهاً وإصغاءً. المرأة أكثر تقديراً وقبولاً. مع الوقت، تتراكم الضغوط ويبدأ كل طرف في العودة إلى طبيعته دون أن يُعوّض الطرف الآخر.',
+                text2: 'الحل ليس العودة إلى بداية العلاقة — بل التطور إلى مرحلة أعمق من الحب تقوم على الفهم الحقيقي لا الانجذاب الأولي فقط.'
+              },
+              {
+                icon: '🔑', title: 'أدوات إبقاء العلاقة حية',
+                points: [
+                  { icon: '🗓️', text: 'خصص وقتاً منتظماً ثنائياً — موعد أسبوعي بلا هواتف أو أطفال' },
+                  { icon: '🌟', text: 'جرّب أشياء جديدة معاً — التجارب الجديدة تُجدّد الألفة' },
+                  { icon: '💬', text: 'أُنصت بشكل كامل لشريكك مرة في الأسبوع على الأقل' },
+                  { icon: '🙏', text: 'قل شكراً على ثلاثة أشياء يومياً — صغيرة وكبيرة' },
+                  { icon: '❤️', text: 'أخبر شريكك "أحبك" يومياً — لا تعتبرها مضمونة' },
+                  { icon: '🎁', text: 'مفاجآت صغيرة غير متوقعة — لا تحتاج إلى مناسبة' }
+                ]
+              },
+              {
+                icon: '🌅', title: 'الحب كممارسة يومية',
+                text: 'الخلاصة التي يصل إليها الكتاب: الحب ليس شعوراً فحسب — بل هو ممارسة يومية واختيار مستمر. كل يوم تختار أن تُعطي، أن تفهم، أن تتقبّل، أن تشكر.',
+                quote: 'الحب الناضج لا يعني غياب الخلافات — بل يعني أن كلا الطرفين يُقرران كل يوم أن يُحبّا بعضهما بلغة يفهمها الطرف الآخر.',
+                lesson: 'الكتاب كله يصب في نقطة واحدة: افهم الاختلاف، اقبله، وابنِ جسراً من الكلمات والأفعال والتعاطف يربط بين كوكبكما المختلفين. هذا هو الحب الحقيقي.'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  </script>
+</body>
+</html>
